@@ -1,7 +1,7 @@
 /*jshint laxbreak:true */
 
 var sizeParser = require('filesize-parser');
-var exec = require('child_process').exec, child;
+var exec = require('child_process').execFile;
 
 module.exports = function(path, opts, cb) {
   if (!cb) {
@@ -13,8 +13,9 @@ module.exports = function(path, opts, cb) {
     console.log('Input Validation failed, Suspicious Characters found');
   } else {
     var cmd = module.exports.cmd(path, opts);
+    var args = cmd.split(" ");
     opts.timeout = opts.timeout || 5000;
-    exec(cmd, opts, function(e, stdout, stderr) {
+    exec(args[0], args.slice(1), opts, function(e, stdout, stderr) {
       if (e) { return cb(e); }
     if (stderr) { return cb(new Error(stderr)); }
 
@@ -36,7 +37,7 @@ module.exports.cmd = function(path, opts) {
     (opts.exif ? '%[exif:*]' : '')
   ].join("\n");
 
-  return 'identify -format "' + format + '" ' + path;
+  return 'identify -format ' + format + ' ' + path;
 };
 
 module.exports.parse = function(path, stdout, opts) {

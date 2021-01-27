@@ -5,17 +5,17 @@ var metadata = require('./index');
 
 describe('metadata.cmd()', function() {
   it('returns command without exif data', function() {
-    var cmd = 'identify -format "name=\nsize=%[size]\nformat=%m\n'
+    var cmd = 'identify -format name=\nsize=%[size]\nformat=%m\n'
             + 'colorspace=%[colorspace]\nheight=%[height]\nwidth=%[width]\n'
-            + 'orientation=%[orientation]\n" /foo/bar/baz';
+            + 'orientation=%[orientation]\n /foo/bar/baz';
 
     assert.equal(metadata.cmd('/foo/bar/baz'), cmd);
   });
 
   it('returns command with exif data', function() {
-    var cmd = 'identify -format "name=\nsize=%[size]\nformat=%m\n'
+    var cmd = 'identify -format name=\nsize=%[size]\nformat=%m\n'
             + 'colorspace=%[colorspace]\nheight=%[height]\nwidth=%[width]\n'
-            + 'orientation=%[orientation]\n%[exif:*]" /foo/bar/baz';
+            + 'orientation=%[orientation]\n%[exif:*] /foo/bar/baz';
 
     assert.equal(metadata.cmd('/foo/bar/baz', {exif: true}), cmd);
   });
@@ -111,7 +111,7 @@ describe('metadata()', function() {
 
       assert.equal(data.path, './assets/image.jpg');
       assert.equal(data.name, '');
-      assert.equal(data.size, 4504682);
+      assert.equal(data.size, 4504504);
       assert.equal(data.format, 'JPEG');
       assert.equal(data.colorspace, 'RGB');
       assert.equal(data.height, 3456);
@@ -130,7 +130,7 @@ describe('metadata()', function() {
 
       assert.equal(data.path, './assets/image.jpg');
       assert.equal(data.name, '');
-      assert.equal(data.size, 4504682);
+      assert.equal(data.size, 4504504);
       assert.equal(data.format, 'JPEG');
       assert.equal(data.colorspace, 'RGB');
       assert.equal(data.height, 3456);
@@ -138,7 +138,7 @@ describe('metadata()', function() {
       assert.equal(data.orientation, 'TopLeft');
 
       assert.equal(typeof data.exif, 'object');
-      assert.equal(Object.keys(data.exif).length, 36);
+      assert.equal(Object.keys(data.exif).length, 41);
       assert.equal(data.exif.ApertureValue, '37/8');
 
       done();
